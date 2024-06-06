@@ -60,10 +60,15 @@
   --color-fulminante-rgba: 240, 140, 220;
   --color-eliminado: #639dd3;
   --fuente-titulos: 'TacticSans';
-  --fuente-contenido: 'Assistant';
+  --fuente-contenido: 'Nunito';
   --fuente-header: 'Michroma';
   --animation-duration: 2s;
   --animation-delay: calc(var(--animation-duration)/4);
+  --color-epic:#7e22ce;
+  --color-legendario:#ea580c;
+  --color-base:#81051a;
+  --color-detalles: #c084fc;
+  --color-detalles2: #a855f7;
 }
 
 
@@ -81,7 +86,7 @@
 }
 
 @import url('https://fonts.googleapis.com/css2?family=Assistant&family=Michroma&display=swap');
-
+@import url('https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200..1000;1,200..1000&display=swap');
 /* @font-face {
   font-family: 'TacticSans';
   src: url('./fonts/TacticSansExtExd-Blk.otf') format('opentype');
@@ -114,6 +119,7 @@
 .GeneralFont {
 font-family: var(--fuente-contenido);
 font-weight: 500;
+font-size: 0.9rem;
 }
 
 .header {
@@ -134,10 +140,14 @@ font-weight: 500;
   #1f185b 30%,
   rgba(31, 24, 91, 0.5) 85%); */
 
-  background-image: linear-gradient(to top right,
+  /* background-image: linear-gradient(to top right,
   #602697 0%,
   #040e3e 50%,
-  #145b9e 100%);
+  #145b9e 100%); */
+  background-image: linear-gradient(to top,
+  #280503 0%,
+  /* #18181D 50%, */
+  var(--color-base) 100%);
    box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.5);
  
   /* background-image: linear-gradient(to right,
@@ -157,10 +167,10 @@ font-weight: 500;
 .header--sticky {
   transform: translateY(0);
   /* background-color: lightgray; */
-  background-image: linear-gradient(to top right,
+  /* background-image: linear-gradient(to top right,
   #602697 0%,
   #040e3e 50%,
-  #145b9e 100%);
+  #145b9e 100%); */
   /* rgba(31, 24, 91, 1) 85%); */
   /* box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); */
   box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.5);
@@ -170,29 +180,12 @@ font-weight: 500;
   padding: 0px 12px;
 }
 
-.homeIcon {
-  color: #c138db;
-  animation: colorTransition 5s infinite;
-  filter:drop-shadow(0 0 4px white);
-}
-
-@keyframes colorTransition {
-  0% {
-    color: #c138db;
-  }
-  50% {
-    color: #202af3;
-  }
-  100% {
-    color: #c138db;
-  }
-}
-
 .content {
   padding-top: 65px;
   padding-bottom: 10px;
   min-height: 100vh;
-  background-color: var(--color-primario-oscuro);
+  /* background-color: var(--color-primario-oscuro); */
+  background-color: #280503;
   margin: 0 auto !important;
 }
 
@@ -2151,7 +2144,19 @@ justify-content: center;
 }
 
 .toggle-button-group {
-  margin-bottom: 15px;
+  margin: 10px 0px;
+}
+
+.toggle-button-group button {
+  font-family: var(--fuente-contenido);
+  font-size: 0.9rem;
+  background-color: black;
+  border: 1px solid var(--color-detalles) !important;
+}
+
+.toggle-button-group .active {
+  background-color: #81051a !important;
+  color: #fff;
 }
 
 table {
@@ -2163,15 +2168,38 @@ table {
   background-color: rgba(0, 0, 0, 0.75) !important;
 }
 
+.builds-table td:first-child {
+  white-space: nowrap;
+}
+
+.builds-table td:not(:first-child),
+.builds-table th:not(:first-child) {
+  border-left: 5px solid #280503;
+}
+
+.builds-table.selectedBuild td:not(:first-child),
+.builds-table.selectedBuild th:not(:first-child) {
+  border-left: none !important;
+}
+
+.builds-table.selectedBuild td:nth-child(3) {
+  text-align: right;
+}
+
 .builds-container {
 overflow-x: auto;
 -webkit-overflow-scrolling: touch;
+margin: 10px 0px;
 }
 
 .builds-table th {
   color: white !important;
   background-color: rgba(82, 82, 91, 0.75) !important;
   vertical-align: middle !important;
+}
+
+.builds-table th.builds-header {
+  background-color: #534b36 !important;
 }
 
 .epic {
@@ -2193,5 +2221,50 @@ overflow-x: auto;
 }
 
 .table-break {
-  border-bottom: 2px solid black !important;
+  border-bottom: 5px solid #280503 !important;
+}
+
+.builds-header {
+  position: relative;
+  border-bottom: 5px solid #280503 !important;
+}
+
+.icon-eye {
+  position: absolute;
+  top: 1px;
+  right: 4px;
+  cursor: pointer;
+  opacity: 0.75;
+  color: #81051a;
+  background-color: white;
+  padding: 1px;
+  border-radius: 20px 0px 20px 20px;
+  transform: scale(1.5);
+}
+
+.icon-eye.hidden {
+  display: none;
+}
+
+.columnToggleButtons {
+  font-weight: 600;
+  margin-bottom: 10px;
+  margin-top: 1px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  align-items: center;
+  border: 1px solid var(--color-secundario-oscuro);
+  box-shadow: 0 0 1px 1px var(--color-secundario-claro);
+  border-radius: 5px;
+}
+
+
+.toggleButton {
+  font-size: 0.9rem;
+  margin: 5px;
+  color: white;
+  border: 1px solid var(--color-terciario-oscuro);
+  background-color: var(--color-secundario-claro);
+  border-radius: 5px;
 }

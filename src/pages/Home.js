@@ -9,6 +9,7 @@ import {BsFillPersonLinesFill, BsReverseLayoutTextWindowReverse, BsCalendarWeek,
 // import { participants, participantsChart } from "../data/participantsData";
 import { fetchData } from '../componentes/DataService';
 import items from "../data/data";
+import { IoEye } from "react-icons/io5";
 
 
 function Home() {
@@ -37,59 +38,28 @@ useEffect(() => {
   fetchDataFromAPI();
 }, []);
 
-// useEffect(() => {
-//   const fetchData = async () => {
-//     try {
-//       const response = await fetch('https://raw.githubusercontent.com/Gaboamador/gh-data/main/participants.json');
-//       const jsonData = await response.json();
-//         // Check if the response has a "participants" property
-//         if (jsonData.participants && Array.isArray(jsonData.participants)) {
-//           setParticipants(jsonData.participants);
-//         } else {
-//           console.error('Invalid data format:', jsonData);
-//         }
-//     } catch (error) {
-//       console.error('Error fetching data:', error);
-//     }
-//   };
-//   fetchData();
-// }, []);
-/*fin llamado de datos automaticos*/
+const [hiddenColumns, setHiddenColumns] = useState([]);
 
-/*inicio llamado de datos automaticos*/
+const toggleColumn = (key) => {
+  if (hiddenColumns.includes(key)) {
+    setHiddenColumns(hiddenColumns.filter(col => col !== key));
+  } else {
+    setHiddenColumns([...hiddenColumns, key]);
+  }
+};
 
-
-// useEffect(() => {
-// const fetchData = async () => {
-//   try {
-//     const response = await fetch('https://raw.githubusercontent.com/Gaboamador/gh-data/main/participantsChart.json');
-//     const jsonData = await response.json();
-//       // Check if the response has a "participants" property
-//       if (jsonData.participantsChart && Array.isArray(jsonData.participantsChart)) {
-//         setParticipantsChart(jsonData.participantsChart);
-//       } else {
-//         console.error('Invalid data format:', jsonData);
-//       }
-//   } catch (error) {
-//     console.error('Error fetching data:', error);
-//   }
-// };
-// fetchData();
-// }, []);
-/*fin llamado de datos automaticos*/
-
-//   const context= useContext(Context)
-  
-    // Separate participantsChart into non-eliminated and eliminated participants
-//   const nonEliminatedParticipants = participantsChart.filter(participant => participants.includes(participant));
-//   const eliminatedParticipants = participantsChart.filter(participant => !participants.includes(participant));
-  
-//   const updateSelectedParticipant = (participant) => {
-//     context.setSelectedParticipant(participant);
-// }
+const handleHeaderClick = (buildName) => {
+  if (selectedClass !== "All") {
+    const columnsToHide = filteredBuilds
+      .filter(build => build.class === selectedClass && build.name !== buildName)
+      .map(build => build.name);
+    setHiddenColumns([...new Set([...hiddenColumns, ...columnsToHide])]);
+  }
+};
 
 const handleClassFilter = (className) => {
-    if (className === 'All') {
+  setHiddenColumns([])  
+  if (className === 'All') {
       setFilteredBuilds(builds);
     } else {
       const filtered = builds.filter(build => build.class === className);
@@ -98,6 +68,28 @@ const handleClassFilter = (className) => {
     setSelectedClass(className);
   };
 
+  const getPropertyValue = (propName) => {
+    const prop = items.props.find(p => p.name === propName);
+    return prop ? prop.value : '';
+  };
+
+   const getBuildProperties = (build) => {
+    const buildProps = {};
+    Object.keys(build).forEach(key => {
+      if (key.includes("_prop1") || key.includes("_prop2")) {
+        const propName = build[key];
+        const propValue = getPropertyValue(propName);
+        if (propName) {
+          buildProps[propName] = propValue;
+        }
+      }
+    });
+    return buildProps;
+  };
+  
+
+  const selectedBuild = filteredBuilds.find(build => selectedClass !== 'All' && !hiddenColumns.includes(build.name) && hiddenColumns.length >= 1);
+  const buildProps = selectedBuild ? getBuildProperties(selectedBuild) : {};
 
  // Define header mapping
  const headerMapping = {
@@ -134,29 +126,17 @@ const handleClassFilter = (className) => {
     gw2_perk1: "PERK 1",
     gw2_perk2: "PERK 2"
   };
-// const headers = Object.keys(builds[0]);
-// console.log(headers, "headers")
-
-// const properties = builds.lenght ? Object.keys(builds[0]) : console.error();
-
-
-// console.log(builds, "builds")
-// console.log(properties, "properties")
 
   // Check if builds has data before proceeding
   if (builds.length === 0) {
     return <p>Loading...</p>;
   }
 
-  // Get the properties (keys) from the first build object
-//   const properties = Object.keys(builds[0]);
 const properties = Object.keys(builds[0]).filter(prop => prop !== 'name');
 
-  
-
-return (
+ return (
 <div className="content">
-<div className="paddingContent"></div>
+{/* <div className="paddingContent"></div> */}
 {/* <Container className="navigation">
   {icons.map((item, index) => (
     <Link to={item.to} key={index} className='icon'>
@@ -174,52 +154,58 @@ return (
     <Container className="d-flex justify-content-center toggle-button-group">
         <ButtonToolbar>
             <ButtonGroup>
-                <Button onClick={() => handleClassFilter('All')}>All Builds</Button>
-                <Button onClick={() => handleClassFilter('Hunter')}>Hunter</Button>
-                <Button onClick={() => handleClassFilter('Assassin')}>Assassin</Button>
-                <Button onClick={() => handleClassFilter('Ronin')}>Ronin</Button>
-                <Button onClick={() => handleClassFilter('Samurai')}>Samurai</Button>
+                <Button onClick={() => handleClassFilter('All')} className={selectedClass === 'All' ? 'active' : ''}>All Builds</Button>
+                <Button onClick={() => handleClassFilter('Hunter')} className={selectedClass === 'Hunter' ? 'active' : ''}>Hunter</Button>
+                <Button onClick={() => handleClassFilter('Assassin')} className={selectedClass === 'Assassin' ? 'active' : ''}>Assassin</Button>
+                <Button onClick={() => handleClassFilter('Ronin')} className={selectedClass === 'Ronin' ? 'active' : ''}>Ronin</Button>
+                <Button onClick={() => handleClassFilter('Samurai')} className={selectedClass === 'Samurai' ? 'active' : ''}>Samurai</Button>
             </ButtonGroup>
         </ButtonToolbar>
       </Container>
       
       <Container className="builds-container align-items-center">
       {/* <h1>Builds Table</h1> */}
-      <Table className="builds-table">
+
+      {hiddenColumns.length > 0 && (
+        <div className="columnToggleButtons">
+          {/* <span className="toggleButtonTitulo">COLUMNAS OCULTAS</span> */}
+          {hiddenColumns.map(key => (
+            <button key={key} onClick={() => toggleColumn(key)} className="toggleButton">
+              {key}
+            </button>
+          ))}
+          {/* <button onClick={toggleAllColumns} className="toggleButton MostrarTodo">Mostrar todo</button> */}
+        </div>
+      )}
+
+      <Table className={`builds-table ${selectedClass !== 'All' && hiddenColumns.length >= 1 ? 'selectedBuild' : ''}`}>
         <thead>
           <tr>
-            <th>BUILD</th>
+            <th className="builds-header">BUILD</th>
             {filteredBuilds.map((build, index) => (
-              <th key={index}>{build.name}</th>
+              !hiddenColumns.includes(build.name) && (
+                <th key={index} className="builds-header">{build.name}
+                <IoEye
+                    className={`icon-eye ${selectedClass === 'All' || hiddenColumns.length >= 1 ? 'hidden' : ''}`}
+                    onClick={() => handleHeaderClick(build.name)}
+                  />
+                </th>
+              )
             ))}
+            {selectedClass !== 'All' && hiddenColumns.length >= 1 && (
+                <th className="builds-header"></th>
+              )}
           </tr>
         </thead>
         <tbody>
-        {/* {properties.map((property, index) => (
-            <tr key={index}>
-               <th>{headerMapping[property]}</th>
-              {filteredBuilds.map((build, idx) => {
-          const item = items[property]?.find(
-            (item) => item.name === build[property]
-          );
-          const itemType = item ? item.type : "";
-          const cellClass = itemType ? itemType.toLowerCase() : "";
-
-          return (
-            <td key={idx} className={cellClass}>
-              {build[property]}
-            </td>
-          );
-        })}
-            </tr>
-          ))} */}
             {properties.map((property, index) => {
-      const shouldAddBreak = ["perk3", "katana_perk2", "ranged_perk2", "charm_perk2", "gw1_perk2"].includes(property);
+      const shouldAddBreak = ["ability", "perk3", "katana_perk2", "ranged_perk2", "charm_perk2", "gw1_perk2"].includes(property);
       const isPerk = property.includes("_perk1") || property.includes("_perk2");
       return (
         <tr key={index} className={shouldAddBreak ? "table-break" : ""}>
           <th>{headerMapping[property]}</th>
           {filteredBuilds.map((build, idx) => {
+              if (hiddenColumns.includes(build.name)) return null;
             const item = items[property]?.find(
               (item) => item.name === build[property]
             );
@@ -227,11 +213,17 @@ return (
             const cellClass = itemType ? itemType.toLowerCase() : "";
             const perkClass = isPerk ? "perk" : "not-perk";
             const content = isPerk ? build[property].toUpperCase() : build[property];
+            const propertyValue = buildProps[build[property]] || '';
+
             return (
-               <td key={idx} className={`${cellClass} ${perkClass}`}>
-                {/* {build[property]} */}
+              <React.Fragment key={idx}>
+              <td className={`${cellClass} ${perkClass}`}>
                 {content}
               </td>
+              {selectedClass !== 'All' && hiddenColumns.length >= 1 && (
+                <td className={`${cellClass} ${perkClass}`}>{propertyValue}</td>
+              )}
+            </React.Fragment>
             );
           })}
         </tr>

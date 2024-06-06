@@ -9,6 +9,7 @@ import { AiOutlineRight, AiOutlineDown } from 'react-icons/ai';
 import { BsChevronRight } from "react-icons/bs";
 import { TfiClose } from "react-icons/tfi";
 // import Context from "../context";
+import Logo from "./TitleLogo";
 
 
 const Header = () => {
@@ -134,77 +135,24 @@ const Header = () => {
     //   document.body.classList.toggle('sidebar-open', !sidebarOpen);
     // };
 
-return (
-  
-  <div className={`${sidebarOpen ? 'sidebar-open' : ''}`} >
-    
-    {/* <div className="sidebar-overlay" onClick={toggleSidebar}></div> */}
+return (  
+<div>
 
-<header id="header" className={`header ${sticky ? "header--sticky" : ""} ${sidebarOpen ? "header-sidebarOpen" : ""}`}>
-  
-  <div className={`navMenu ${sidebarOpen ? 'active' : ''}`}>
-          {/* <div className={`navMenuHeaderTop ${sidebarOpen ? 'active' : ''}`}></div> */}
-    {/* <div className="navMenuHeader"> */}
-    <div className={`navMenuHeader ${sidebarOpen ? 'active' : ''}`}>
-    <div className="ml-auto">
-      {/* <img src={gh} alt={""} width="40px" height="40px" style={{marginRight: '1rem'}}/> */}
-    </div>
+<header id="header" className={`header ${sticky ? "header--sticky" : ""}`}>
+  <div className="d-justify-content-between align-items-center header-padding">
     <div className="d-flex align-items-center">
       <h3 className="title-word-class">
-        <span className="title-word-nav">GRAN</span>
+        {/* <span className="title-word">GOT</span>
         <span> </span>
-        <span className="title-word-nav second-word-nav">HERMANO</span>
+        <span className="title-word second-word">LEGENDS</span> */}
+        <Logo/>
       </h3>
     </div>
-    </div>
-    {/* <ul className="sidebar">
-      {navlist.map((item, index) => (
-        <SidebarItem
-          key={index}
-          item={item}
-          activeSubmenus={activeSubmenus}
-          toggleSubmenu={toggleSubmenu}
-          closeSidebar={closeSidebar}
-          collapseAllSubmenus={collapseAllSubmenus}
-        />
-      ))}
-      <ComponenteExportar/>
-    </ul> */}
-    
-    {/* <footer className="navMenuFooter"> */}
-    <footer className={`navMenuFooter ${sidebarOpen ? 'active' : ''}`}>
-    <div className="logoFooter">
-      {/* <img src={ghFooter} alt={""} className="footerImgSize"/> */}
-    </div>
-    </footer>
   </div>
-    
-  <div className="d-flex justify-content-between align-items-center w-100 header-padding">
-    {/* <button className={`openbtn ${sidebarOpen ? 'active' : ''}`} onClick={toggleSidebar}>
-    {sidebarOpen ? <TfiClose className={`iconNavMenu ${sidebarOpen ? 'active' : ''}`} /> : <BsChevronRight className={`iconNavMenu ${sidebarOpen ? 'active' : ''}`} />}
-    </button> */}
-
-    {/* {`d-flex align-items-center ${sidebarOpen ? 'hideHeader' : ''}`} */}
-    {/* <div className="d-flex align-items-center"> */}
-    <div className={`d-flex align-items-center ${sidebarOpen ? 'hideHeader' : 'showHeader'}`}>
-      <h3 className="title-word-class">
-        <span className="title-word">GOT</span>
-        <span> </span>
-        <span className="title-word second-word">LEGENDS</span>
-      </h3>
-    </div>
-    
-{/* {!sidebarOpen && ( */}
-    <div className={`ml-auto ${sidebarOpen ? 'hideHeader' : 'showHeader'}`}>
-      {/* <img src={gh} alt={""} width="40px" height="40px"/> */}
-    </div>
-{/* )} */}
-</div>
-
 </header>
 
-    </div>
-    );
-  };
+</div>
+);
+};
 
 export default Header;
